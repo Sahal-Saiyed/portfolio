@@ -101,22 +101,21 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: "construction-ai",
+    slug: "neev-ai-poc",
     index: "02",
-    title: "AI-Assisted Construction Estimation Platform",
-    shortTitle: "Construction AI",
-    eyebrow: "Freelance · Agentic AI · Workflow systems",
+    title: "NEEV AI POC — Construction Workflow Agent",
+    shortTitle: "NEEV AI POC",
+    eyebrow: "Freelance client POC · Agentic workflows",
     summary:
-      "A domain-specific platform that turns conversational requests for reinforcement formulas and custom shapes into validated, reviewable approval workflows.",
+      "A freelance proof of concept that turns conversational requests for reinforcement formulas and custom shapes into validated, reviewable approval workflows.",
     description:
-      "Built as a paid freelance engagement, this platform helps construction teams manage project hierarchies, reinforcement shapes, formula overrides, and AI-assisted change requests without allowing the agent to make uncontrolled updates.",
+      "Built as a paid freelance engagement, NEEV AI POC helps construction teams manage project hierarchies, reinforcement shapes, formula overrides, and AI-assisted change requests without allowing the agent to make uncontrolled updates.",
     contribution:
       "I developed the LangGraph assistant, deterministic fallback extraction, validation layer, role-based user and admin workflows, formula-resolution services, image storage, and MongoDB persistence.",
     image: "/projects/construction-shape.png",
-    imageAlt:
-      "Technical reinforcement-bar shape showing L1, L2, and L3 measurements",
+    imageAlt: "NEEV AI logo",
     accent: "amber",
-    tags: ["Freelance", "Anonymized", "Business workflow"],
+    tags: ["Freelance client work", "Proof of concept", "Workflow AI"],
     stack: [
       "Python",
       "LangGraph",
@@ -165,7 +164,7 @@ export const projects: Project[] = [
       "Deployed Streamlit application",
     ],
     limitations: [
-      "Client and product identity are intentionally withheld.",
+      "Client-sensitive implementation details are intentionally withheld.",
       "Proprietary formulas, screenshots, and operational data are not displayed.",
       "The engagement focused on a practical proof of concept rather than public multi-tenant distribution.",
     ],
@@ -323,9 +322,9 @@ export const experience = [
   {
     period: "May — Jun 2026",
     role: "Freelance AI Engineer",
-    organization: "Independent engagement",
+    organization: "Independent client engagement",
     detail:
-      "Built an agentic construction-estimation platform with structured LangGraph workflows, role-based approval, project-specific formula overrides, and MongoDB Atlas.",
+      "Built NEEV AI POC with structured LangGraph workflows, role-based approval, project-specific formula overrides, and MongoDB Atlas.",
   },
   {
     period: "Jan — Apr 2025",
@@ -366,4 +365,3 @@ export const capabilities = [
     tags: ["FastAPI", "React", "TypeScript", "MongoDB"],
   },
 ];
-

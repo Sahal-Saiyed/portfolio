@@ -138,7 +138,7 @@ export default function Home() {
               <h2>Systems designed around real problems.</h2>
             </div>
             <p>
-              From grounded legal retrieval to construction workflows,
+              From grounded legal retrieval to NEEV AI POC workflows,
               multimodal generation, and revenue forecasting.
             </p>
           </div>

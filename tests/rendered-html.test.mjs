@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 async function render(pathname = "/") {
@@ -36,6 +37,8 @@ test("server-renders the finished portfolio homepage", async () => {
   assert.match(html, /<title>Muhammadsahal Saiyed — AI\/ML Engineer/);
   assert.match(html, /I build AI systems that move from/);
   assert.match(html, /JuriGPT/);
+  assert.match(html, /NEEV AI POC/);
+  assert.match(html, /Freelance client work/);
   assert.match(html, /CaptionCaptain/);
   assert.match(html, /RevCast AI/);
   assert.match(html, /id="contact"/);
@@ -43,6 +46,28 @@ test("server-renders the finished portfolio homepage", async () => {
   assert.match(html, /src="\/projects\/jurigpt\.png"/);
   assert.doesNotMatch(html, /\/_vinext\/image/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|SkeletonPreview/);
+});
+
+test("server-renders the NEEV freelance case study", async () => {
+  const response = await render("/work/neev-ai-poc");
+  assert.equal(response.status, 200);
+
+  const html = await response.text();
+  assert.match(html, /NEEV AI POC — Construction Workflow Agent/);
+  assert.match(html, /Freelance client POC/);
+  assert.match(html, /paid freelance engagement/);
+  assert.match(html, /src="\/projects\/construction-shape\.png"/);
+  assert.doesNotMatch(html, /Construction AI/);
+  assert.doesNotMatch(html, /\/_vinext\/image/);
+});
+
+test("keeps the transparent NEEV logo free of a CSS background panel", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  const cardRule = css.match(/\.project-card__image--neev-ai-poc\s*\{([^}]*)\}/)?.[1] ?? "";
+  const heroRule = css.match(/\.case-hero__image--neev-ai-poc\s*\{([^}]*)\}/)?.[1] ?? "";
+
+  assert.doesNotMatch(cardRule, /background|border|padding/);
+  assert.doesNotMatch(heroRule, /background|border|padding/);
 });
 
 test("server-renders a detailed project case study", async () => {

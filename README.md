@@ -6,7 +6,7 @@ Ahmedabad, India.
 The site presents four detailed case studies:
 
 - JuriGPT
-- AI-Assisted Construction Estimation Platform
+- NEEV AI POC — freelance construction workflow agent
 - CaptionCaptain
 - RevCast AI
 
@@ -26,4 +26,3 @@ npm run dev
 npm run build
 npm test
 ```
-

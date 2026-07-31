@@ -735,13 +735,9 @@ img {
   border-radius: 18px;
 }
 
-.project-card__image--construction-ai {
+.project-card__image--neev-ai-poc {
   width: 70%;
   max-width: 70%;
-  padding: 20px;
-  border: 1px solid rgba(13, 23, 32, 0.12);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.84);
 }
 
 .project-card__image--revcast {
@@ -1480,12 +1476,9 @@ img {
   filter: drop-shadow(0 20px 26px rgba(13, 23, 32, 0.16));
 }
 
-.case-hero__image--construction-ai {
+.case-hero__image--neev-ai-poc {
   width: 90%;
   max-width: 90%;
-  border-radius: 10px;
-  background: white;
-  padding: 22px;
 }
 
 .case-hero__image--captioncaptain {
@@ -2182,4 +2175,3 @@ img {
   outline: 3px solid var(--blue);
   outline-offset: 3px;
 }
-

@@ -40,3 +40,8 @@ next-env.d.ts
 /.wrangler/
 /outputs/
 /work/
+
+# virtual environment
+.venv
+venv
+.venv/

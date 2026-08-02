@@ -1,11 +1,12 @@
 "use client";
 
-import { Menu, X } from "lucide-react";
+import { ArrowUpRight, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const navItems = [
   { label: "Work", href: "/#work" },
   { label: "Experience", href: "/#experience" },
+  { label: "Capabilities", href: "/#capabilities" },
   { label: "About", href: "/#about" },
   { label: "Contact", href: "/#contact" },
 ];
@@ -15,18 +16,27 @@ export function Header() {
 
   useEffect(() => {
     if (!open) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     const close = (event: KeyboardEvent) => {
       if (event.key === "Escape") setOpen(false);
     };
     window.addEventListener("keydown", close);
-    return () => window.removeEventListener("keydown", close);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", close);
+    };
   }, [open]);
 
   return (
     <header className="site-header">
       <a className="brand-mark" href="/" aria-label="Muhammadsahal Saiyed, home">
-        <span>MS</span>
-        <span className="brand-mark__status" aria-hidden="true" />
+        <span className="brand-mark__monogram">MS</span>
+        <span className="brand-mark__copy">
+          <strong>Muhammadsahal Saiyed</strong>
+          <small>AI/ML Engineer</small>
+        </span>
       </a>
 
       <nav className="desktop-nav" aria-label="Primary navigation">
@@ -43,7 +53,7 @@ export function Header() {
         target="_blank"
         rel="noreferrer"
       >
-        Résumé <span aria-hidden="true">↗</span>
+        Résumé <ArrowUpRight size={15} strokeWidth={1.8} aria-hidden="true" />
       </a>
 
       <button
@@ -68,16 +78,17 @@ export function Header() {
             </a>
           ))}
           <a
+            className="mobile-resume-link"
             href="/Muhammadsahal_Saiyed_Resume.pdf"
             target="_blank"
             rel="noreferrer"
             onClick={() => setOpen(false)}
           >
-            Résumé ↗
+            Download résumé
+            <ArrowUpRight size={16} strokeWidth={1.8} aria-hidden="true" />
           </a>
         </nav>
       </div>
     </header>
   );
 }
-

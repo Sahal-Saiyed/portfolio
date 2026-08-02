@@ -1,9 +1,96 @@
 "use client";
 
-import { CheckCircle2, LoaderCircle, Send } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { Check, CheckCircle2, ChevronDown, LoaderCircle, Send } from "lucide-react";
+import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 
 type FormState = "idle" | "sending" | "success" | "error";
+
+const inquiryOptions = [
+  "Job opportunity",
+  "Freelance project",
+  "Founder collaboration",
+  "General inquiry",
+];
+
+function InquirySelect() {
+  const [value, setValue] = useState(inquiryOptions[0]);
+  const [open, setOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const closeOnOutsideClick = (event: PointerEvent) => {
+      if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
+    };
+    document.addEventListener("pointerdown", closeOnOutsideClick);
+    return () => document.removeEventListener("pointerdown", closeOnOutsideClick);
+  }, []);
+
+  function handleKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
+    if (event.key === "Escape") {
+      setOpen(false);
+      return;
+    }
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      const direction = event.key === "ArrowDown" ? 1 : -1;
+      setOpen(true);
+      setActiveIndex((index) =>
+        (index + direction + inquiryOptions.length) % inquiryOptions.length,
+      );
+      return;
+    }
+
+    if (open && (event.key === "Enter" || event.key === " ")) {
+      event.preventDefault();
+      setValue(inquiryOptions[activeIndex]);
+      setOpen(false);
+    }
+  }
+
+  return (
+    <div className={`select-field ${open ? "select-field--open" : ""}`} ref={rootRef}>
+      <input type="hidden" name="inquiry" value={value} />
+      <button
+        type="button"
+        className="select-field__trigger"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls="inquiry-options"
+        onClick={() => setOpen((current) => !current)}
+        onKeyDown={handleKeyDown}
+      >
+        <span>{value}</span>
+        <ChevronDown size={17} strokeWidth={1.8} aria-hidden="true" />
+      </button>
+
+      {open && (
+        <div className="select-field__menu" id="inquiry-options" role="listbox">
+          {inquiryOptions.map((option, index) => (
+            <button
+              type="button"
+              id={`inquiry-option-${index}`}
+              role="option"
+              aria-selected={value === option}
+              className={activeIndex === index ? "is-active" : ""}
+              key={option}
+              onMouseEnter={() => setActiveIndex(index)}
+              onClick={() => {
+                setValue(option);
+                setActiveIndex(index);
+                setOpen(false);
+              }}
+            >
+              <span>{option}</span>
+              {value === option && <Check size={16} aria-hidden="true" />}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function ContactForm() {
   const [state, setState] = useState<FormState>("idle");
@@ -83,12 +170,7 @@ export function ContactForm() {
 
       <label>
         <span>What would you like to discuss?</span>
-        <select name="inquiry" defaultValue="Job opportunity" required>
-          <option>Job opportunity</option>
-          <option>Freelance project</option>
-          <option>Founder collaboration</option>
-          <option>General inquiry</option>
-        </select>
+        <InquirySelect />
       </label>
 
       <label>
@@ -103,7 +185,11 @@ export function ContactForm() {
       </label>
 
       <div className="contact-form__footer">
-        <button type="submit" disabled={state === "sending" || state === "success"}>
+        <button
+          type="submit"
+          className="contact-form__submit"
+          disabled={state === "sending" || state === "success"}
+        >
           {state === "sending" ? (
             <LoaderCircle className="spin" size={18} aria-hidden="true" />
           ) : state === "success" ? (
@@ -124,4 +210,3 @@ export function ContactForm() {
     </form>
   );
 }
-

@@ -1,5 +1,4 @@
 import {
-  ArrowDown,
   ArrowUpRight,
   BriefcaseBusiness,
   Code2,
@@ -24,19 +23,30 @@ export const metadata: Metadata = {
 const socialLinks = [
   {
     label: "GitHub",
+    value: "@Sahal-Saiyed",
     href: "https://github.com/Sahal-Saiyed",
     icon: Code2,
   },
   {
     label: "LinkedIn",
+    value: "sahal-saiyed",
     href: "https://www.linkedin.com/in/sahal-saiyed",
     icon: BriefcaseBusiness,
   },
   {
     label: "Email",
+    value: "sahalsyed144@gmail.com",
     href: "mailto:sahalsyed144@gmail.com",
     icon: Mail,
   },
+];
+
+const footerLinks = [
+  { label: "Work", href: "#work" },
+  { label: "Experience", href: "#experience" },
+  { label: "Capabilities", href: "#capabilities" },
+  { label: "About", href: "#about" },
+  { label: "Contact", href: "#contact" },
 ];
 
 export default function Home() {
@@ -44,38 +54,31 @@ export default function Home() {
     <main>
       <Header />
 
-      <section className="hero section-shell" aria-labelledby="hero-title">
+      <section id="top" className="hero section-shell" aria-labelledby="hero-title">
         <div className="hero__copy">
           <BlurFade inView={false}>
-            <div className="availability-pill">
-              <span aria-hidden="true" />
-              Open to AI/ML opportunities
-            </div>
+            <p className="hero__kicker">Muhammadsahal Saiyed · Applied AI</p>
           </BlurFade>
 
           <BlurFade inView={false} delay={0.08}>
-            <p className="hero__kicker">Muhammadsahal Saiyed · AI/ML Engineer</p>
-          </BlurFade>
-
-          <BlurFade inView={false} delay={0.14}>
             <h1 id="hero-title">
-              I build AI systems that move from{" "}
-              <span className="headline-accent">models to real products.</span>
+              AI/ML Engineer building{" "}
+              <span className="headline-accent">reliable intelligent products.</span>
             </h1>
           </BlurFade>
 
-          <BlurFade inView={false} delay={0.22}>
+          <BlurFade inView={false} delay={0.16}>
             <p className="hero__description">
-              Applied AI engineer specializing in RAG, agentic workflows,
-              multimodal systems, machine learning, and the product engineering
-              that makes them useful.
+              I design and ship RAG systems, AI agents, multimodal applications,
+              and machine-learning products—from model logic to deployed user
+              experiences.
             </p>
           </BlurFade>
 
-          <BlurFade inView={false} delay={0.3}>
+          <BlurFade inView={false} delay={0.24}>
             <div className="hero__actions">
               <InteractiveHoverButton href="#work">
-                Explore my work
+                View selected work
               </InteractiveHoverButton>
               <a
                 className="text-link"
@@ -88,14 +91,20 @@ export default function Home() {
             </div>
           </BlurFade>
 
-          <BlurFade inView={false} delay={0.36}>
-            <div className="hero__location">
-              <MapPin size={15} aria-hidden="true" />
-              Ahmedabad, India
-              <span aria-hidden="true">·</span>
-              Remote
-              <span aria-hidden="true">·</span>
-              Open to relocation
+          <BlurFade inView={false} delay={0.3}>
+            <div className="hero__meta">
+              <div className="availability-pill">
+                <span aria-hidden="true" />
+                Open to roles &amp; selected freelance work
+              </div>
+              <div className="hero__location">
+                <MapPin size={15} aria-hidden="true" />
+                Ahmedabad, India
+                <span aria-hidden="true">·</span>
+                Remote
+                <span aria-hidden="true">·</span>
+                Open to relocation
+              </div>
             </div>
           </BlurFade>
         </div>
@@ -104,33 +113,9 @@ export default function Home() {
           <HeroSystem />
         </BlurFade>
 
-        <a className="scroll-cue" href="#work">
-          Selected work <ArrowDown size={14} aria-hidden="true" />
-        </a>
       </section>
 
-      <section className="metrics-strip" aria-label="Portfolio highlights">
-        <div className="section-shell metrics-strip__inner">
-          <div>
-            <strong>4</strong>
-            <span>featured systems</span>
-          </div>
-          <div>
-            <strong>3</strong>
-            <span>live products</span>
-          </div>
-          <div>
-            <strong>1</strong>
-            <span>freelance engagement</span>
-          </div>
-          <div>
-            <strong>RAG → ML</strong>
-            <span>end-to-end range</span>
-          </div>
-        </div>
-      </section>
-
-      <section id="work" className="section-shell section-block">
+      <section id="work" className="work-section section-shell section-block section-block--first">
         <BlurFade>
           <div className="section-heading">
             <div>
@@ -146,14 +131,68 @@ export default function Home() {
         <BlurFade delay={0.08}>
           <ProjectGrid projects={projects} />
         </BlurFade>
+
+        <div className="additional-work">
+          <BlurFade>
+            <article>
+              <div>
+                <p className="section-label">More work</p>
+                <h3>HydroSense</h3>
+              </div>
+              <p>
+                A machine-learning web application for predicting water
+                potability from chemical and physical measurements using a Random
+                Forest classifier.
+              </p>
+              <a
+                href="https://hydrosense.streamlit.app/"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Open HydroSense live application"
+              >
+                Live project <ArrowUpRight size={16} aria-hidden="true" />
+              </a>
+            </article>
+          </BlurFade>
+        </div>
       </section>
 
-      <section className="capabilities-section section-block">
+      <section id="experience" className="experience-section section-shell section-block">
+        <BlurFade>
+          <div className="section-heading">
+            <div>
+              <p className="section-label">02 / Experience</p>
+              <h2>Experience grounded in shipped work.</h2>
+            </div>
+            <p>
+              A foundation in computer engineering, strengthened through
+              internships, deployment, hackathons, and paid client work.
+            </p>
+          </div>
+        </BlurFade>
+
+        <div className="experience-list">
+          {experience.map((item, index) => (
+            <BlurFade key={`${item.role}-${item.period}`} delay={index * 0.06}>
+              <article className="experience-item">
+                <span className="experience-item__period">{item.period}</span>
+                <div>
+                  <h3>{item.role}</h3>
+                  <p className="experience-item__org">{item.organization}</p>
+                </div>
+                <p className="experience-item__detail">{item.detail}</p>
+              </article>
+            </BlurFade>
+          ))}
+        </div>
+      </section>
+
+      <section id="capabilities" className="capabilities-section section-block">
         <div className="section-shell">
           <BlurFade>
             <div className="section-heading section-heading--light">
               <div>
-                <p className="section-label">02 / Engineering range</p>
+                <p className="section-label">03 / Engineering range</p>
                 <h2>Useful AI needs more than a model.</h2>
               </div>
               <p>
@@ -184,36 +223,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="experience" className="section-shell section-block">
-        <BlurFade>
-          <div className="section-heading">
-            <div>
-              <p className="section-label">03 / Experience</p>
-              <h2>Building through practice.</h2>
-            </div>
-            <p>
-              A foundation in computer engineering, strengthened through
-              internships, deployment, hackathons, and paid client work.
-            </p>
-          </div>
-        </BlurFade>
-
-        <div className="experience-list">
-          {experience.map((item, index) => (
-            <BlurFade key={`${item.role}-${item.period}`} delay={index * 0.06}>
-              <article className="experience-item">
-                <span className="experience-item__period">{item.period}</span>
-                <div>
-                  <h3>{item.role}</h3>
-                  <p className="experience-item__org">{item.organization}</p>
-                </div>
-                <p className="experience-item__detail">{item.detail}</p>
-              </article>
-            </BlurFade>
-          ))}
-        </div>
-      </section>
-
       <section id="about" className="about-section section-block">
         <div className="section-shell about-grid">
           <BlurFade className="about-section__heading">
@@ -241,6 +250,11 @@ export default function Home() {
               opportunity, and available for focused freelance collaborations
               with founders and product teams.
             </p>
+            <div className="about-availability" aria-label="Current availability">
+              <span>Full-time AI/ML roles</span>
+              <span>Remote opportunities</span>
+              <span>Selected freelance work</span>
+            </div>
             <a
               className="text-link"
               href="https://github.com/Sahal-Saiyed"
@@ -253,43 +267,24 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="additional-work section-shell">
-        <BlurFade>
-          <article>
-            <div>
-              <p className="section-label">Additional work</p>
-              <h3>HydroSense</h3>
-            </div>
-            <p>
-              A machine-learning web application for predicting water
-              potability from chemical and physical measurements using a Random
-              Forest classifier.
-            </p>
-            <a
-              href="https://hydrosense.streamlit.app/"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Open HydroSense live application"
-            >
-              Live project <ArrowUpRight size={16} aria-hidden="true" />
-            </a>
-          </article>
-        </BlurFade>
-      </section>
-
       <section id="contact" className="contact-section section-block">
         <div className="section-shell contact-grid">
           <BlurFade className="contact-section__intro">
             <p className="section-label">05 / Contact</p>
-            <h2>Have a role, product idea, or difficult AI problem?</h2>
+            <h2>Let’s build something useful.</h2>
             <p>
-              I’m open to AI/ML roles, remote opportunities, freelance projects,
-              and collaborations with teams building useful intelligent
-              products.
+              Whether you’re hiring for an AI/ML role or exploring a focused
+              product collaboration, tell me what you’re working on.
             </p>
 
+            <a className="contact-email" href="mailto:sahalsyed144@gmail.com">
+              <span>Email me directly</span>
+              <strong>sahalsyed144@gmail.com</strong>
+              <ArrowUpRight size={18} aria-hidden="true" />
+            </a>
+
             <div className="contact-links">
-              {socialLinks.map(({ label, href, icon: Icon }) => (
+              {socialLinks.filter(({ label }) => label !== "Email").map(({ label, value, href, icon: Icon }) => (
                 <a
                   key={label}
                   href={href}
@@ -297,7 +292,10 @@ export default function Home() {
                   rel={href.startsWith("http") ? "noreferrer" : undefined}
                 >
                   <Icon size={18} aria-hidden="true" />
-                  <span>{label}</span>
+                  <span>
+                    <strong>{label}</strong>
+                    <small>{value}</small>
+                  </span>
                   <ArrowUpRight size={15} aria-hidden="true" />
                 </a>
               ))}
@@ -312,12 +310,33 @@ export default function Home() {
 
       <footer className="site-footer">
         <div className="section-shell site-footer__inner">
-          <div>
-            <strong>Muhammadsahal Saiyed</strong>
-            <span>AI/ML Engineer · Ahmedabad, India</span>
+          <div className="site-footer__main">
+            <div className="site-footer__identity">
+              <strong>Muhammadsahal Saiyed</strong>
+              <p>AI/ML Engineer building dependable intelligent products.</p>
+              <a href="mailto:sahalsyed144@gmail.com">sahalsyed144@gmail.com</a>
+            </div>
+
+            <nav className="site-footer__nav" aria-label="Footer navigation">
+              <span>Navigate</span>
+              {footerLinks.map((link) => (
+                <a key={link.href} href={link.href}>{link.label}</a>
+              ))}
+            </nav>
+
+            <div className="site-footer__connect">
+              <span>Connect</span>
+              <a href="https://github.com/Sahal-Saiyed" target="_blank" rel="noreferrer">GitHub ↗</a>
+              <a href="https://www.linkedin.com/in/sahal-saiyed" target="_blank" rel="noreferrer">LinkedIn ↗</a>
+              <a href="/Muhammadsahal_Saiyed_Resume.pdf" target="_blank" rel="noreferrer">Résumé ↗</a>
+            </div>
           </div>
-          <p>Designed around useful systems, thoughtful details, and real work.</p>
-          <a href="#hero-title">Back to top ↑</a>
+
+          <div className="site-footer__bottom">
+            <span>© 2026 Muhammadsahal Saiyed</span>
+            <span>Ahmedabad, India · Open to remote work</span>
+            <a href="#top">Back to top ↑</a>
+          </div>
         </div>
       </footer>
     </main>

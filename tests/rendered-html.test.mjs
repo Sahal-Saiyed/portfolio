@@ -35,17 +35,37 @@ test("server-renders the finished portfolio homepage", async () => {
 
   const html = await response.text();
   assert.match(html, /<title>Muhammadsahal Saiyed — AI\/ML Engineer/);
-  assert.match(html, /I build AI systems that move from/);
+  assert.match(html, /AI\/ML Engineer building/);
+  assert.match(html, /reliable intelligent products/);
+  assert.match(html, /APPLIED_AI\.SYSTEM/);
+  assert.match(html, /Data/);
+  assert.match(html, /Retrieve/);
+  assert.match(html, /Reason/);
+  assert.match(html, /Validate/);
+  assert.match(html, /Ship/);
   assert.match(html, /JuriGPT/);
-  assert.match(html, /NEEV AI POC/);
+  assert.match(html, /Neev AI Agent/);
   assert.match(html, /Freelance client work/);
   assert.match(html, /CaptionCaptain/);
   assert.match(html, /RevCast AI/);
   assert.match(html, /id="contact"/);
+  assert.match(html, /Let[^<]*s build something useful/);
+  assert.match(html, /sahalsyed144@gmail\.com/);
+  assert.match(html, /Footer navigation/);
   assert.match(html, /https:\/\/portfolio\.test\/og\.png/);
   assert.match(html, /src="\/projects\/jurigpt\.png"/);
   assert.doesNotMatch(html, /\/_vinext\/image/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|SkeletonPreview/);
+
+  const sectionOrder = [
+    'id="work"',
+    'id="experience"',
+    'id="capabilities"',
+    'id="about"',
+    'id="contact"',
+  ].map((marker) => html.indexOf(marker));
+  assert.ok(sectionOrder.every((position) => position >= 0));
+  assert.deepEqual(sectionOrder, [...sectionOrder].sort((a, b) => a - b));
 });
 
 test("server-renders the NEEV freelance case study", async () => {
@@ -53,10 +73,10 @@ test("server-renders the NEEV freelance case study", async () => {
   assert.equal(response.status, 200);
 
   const html = await response.text();
-  assert.match(html, /NEEV AI POC — Construction Workflow Agent/);
+  assert.match(html, /Neev AI Agent/);
   assert.match(html, /Freelance client POC/);
   assert.match(html, /paid freelance engagement/);
-  assert.match(html, /src="\/projects\/construction-shape\.png"/);
+  assert.match(html, /src="\/projects\/neev_ai_agent\.png"/);
   assert.doesNotMatch(html, /Construction AI/);
   assert.doesNotMatch(html, /\/_vinext\/image/);
 });
@@ -68,6 +88,17 @@ test("keeps the transparent NEEV logo free of a CSS background panel", async () 
 
   assert.doesNotMatch(cardRule, /background|border|padding/);
   assert.doesNotMatch(heroRule, /background|border|padding/);
+});
+
+test("keeps section spacing compact and fully fills the primary button on hover", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(css, /\.work-section\s*\{[^}]*padding-bottom:\s*54px/s);
+  assert.match(css, /\.experience-section\s*\{[^}]*padding-top:\s*70px/s);
+  assert.match(css, /transform:\s*scale\(70\)/);
+  assert.match(css, /background:\s*var\(--olive\)/);
+  assert.doesNotMatch(css, /--mint|var\(--mint\)|104,\s*226,\s*179/);
+  assert.match(css, /\.capabilities-section::after,[\s\S]*\.contact-section::after\s*\{[\s\S]*width:\s*72px;[\s\S]*background:\s*var\(--olive\)/);
 });
 
 test("server-renders a detailed project case study", async () => {

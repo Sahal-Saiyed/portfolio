@@ -9,7 +9,7 @@ export type Project = {
   contribution: string;
   image: string;
   imageAlt: string;
-  accent: "mint" | "blue" | "amber" | "violet";
+  accent: "olive" | "blue" | "amber" | "violet";
   tags: string[];
   stack: string[];
   links: {
@@ -40,7 +40,7 @@ export const projects: Project[] = [
       "I designed and built the retrieval pipeline, application services, authentication and persistence flows, document-generation workflow, and responsive React experience.",
     image: "/projects/jurigpt.png",
     imageAlt: "JuriGPT product logo",
-    accent: "mint",
+    accent: "olive",
     tags: ["Flagship", "Live", "End-to-end"],
     stack: [
       "Python",
@@ -103,8 +103,8 @@ export const projects: Project[] = [
   {
     slug: "neev-ai-poc",
     index: "02",
-    title: "NEEV AI POC — Construction Workflow Agent",
-    shortTitle: "NEEV AI POC",
+    title: "Neev AI Agent",
+    shortTitle: "Neev AI Agent",
     eyebrow: "Freelance client POC · Agentic workflows",
     summary:
       "A freelance proof of concept that turns conversational requests for reinforcement formulas and custom shapes into validated, reviewable approval workflows.",
@@ -112,7 +112,7 @@ export const projects: Project[] = [
       "Built as a paid freelance engagement, NEEV AI POC helps construction teams manage project hierarchies, reinforcement shapes, formula overrides, and AI-assisted change requests without allowing the agent to make uncontrolled updates.",
     contribution:
       "I developed the LangGraph assistant, deterministic fallback extraction, validation layer, role-based user and admin workflows, formula-resolution services, image storage, and MongoDB persistence.",
-    image: "/projects/construction-shape.png",
+    image: "/projects/neev_ai_agent.png",
     imageAlt: "NEEV AI logo",
     accent: "amber",
     tags: ["Freelance client work", "Proof of concept", "Workflow AI"],

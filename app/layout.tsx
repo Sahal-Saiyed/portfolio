@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { headers } from "next/headers";
+import { SiteScrollProgress } from "./components/SiteScrollProgress";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -112,6 +113,7 @@ export default async function RootLayout({
           Skip to content
         </a>
         <div id="main-content">{children}</div>
+        <SiteScrollProgress />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}

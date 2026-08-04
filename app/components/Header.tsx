@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowUpRight, Menu, X } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const navItems = [
@@ -11,8 +12,22 @@ const navItems = [
   { label: "Contact", href: "/#contact" },
 ];
 
-export function Header() {
+type HeaderProps = {
+  overlayOnHero?: boolean;
+};
+
+export function Header({ overlayOnHero = false }: HeaderProps) {
   const [open, setOpen] = useState(false);
+  const [hasScrolled, setHasScrolled] = useState(false);
+
+  useEffect(() => {
+    if (!overlayOnHero) return;
+
+    const updateHeader = () => setHasScrolled(window.scrollY > 48);
+    updateHeader();
+    window.addEventListener("scroll", updateHeader, { passive: true });
+    return () => window.removeEventListener("scroll", updateHeader);
+  }, [overlayOnHero]);
 
   useEffect(() => {
     if (!open) return;
@@ -30,14 +45,16 @@ export function Header() {
   }, [open]);
 
   return (
-    <header className="site-header">
-      <a className="brand-mark" href="/" aria-label="Muhammadsahal Saiyed, home">
+    <header
+      className={`site-header ${overlayOnHero && !hasScrolled ? "site-header--uncontained" : "site-header--contained"}`}
+    >
+      <Link className="brand-mark" href="/" aria-label="Muhammadsahal Saiyed, home">
         <span className="brand-mark__monogram">MS</span>
         <span className="brand-mark__copy">
           <strong>Muhammadsahal Saiyed</strong>
           <small>AI/ML Engineer</small>
         </span>
-      </a>
+      </Link>
 
       <nav className="desktop-nav" aria-label="Primary navigation">
         {navItems.map((item) => (

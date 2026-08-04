@@ -1,4 +1,5 @@
 import {
+  ArrowUp,
   ArrowUpRight,
   BriefcaseBusiness,
   Code2,
@@ -52,10 +53,15 @@ const footerLinks = [
 export default function Home() {
   return (
     <main>
-      <Header />
+      <Header overlayOnHero />
 
-      <section id="top" className="hero section-shell" aria-labelledby="hero-title">
-        <div className="hero__copy">
+      <section id="top" className="hero hero--intelligence" aria-labelledby="hero-title">
+        <div className="hero__background" aria-hidden="true">
+          <HeroSystem />
+        </div>
+
+        <div className="hero__content section-shell">
+          <div className="hero__copy">
           <BlurFade inView={false}>
             <p className="hero__kicker">Muhammadsahal Saiyed · Applied AI</p>
           </BlurFade>
@@ -107,12 +113,8 @@ export default function Home() {
               </div>
             </div>
           </BlurFade>
+          </div>
         </div>
-
-        <BlurFade inView={false} delay={0.18} className="hero__visual">
-          <HeroSystem />
-        </BlurFade>
-
       </section>
 
       <section id="work" className="work-section section-shell section-block section-block--first">
@@ -335,7 +337,9 @@ export default function Home() {
           <div className="site-footer__bottom">
             <span>© 2026 Muhammadsahal Saiyed</span>
             <span>Ahmedabad, India · Open to remote work</span>
-            <a href="#top">Back to top ↑</a>
+            <a className="back-to-top" href="#top" aria-label="Back to top" title="Back to top">
+              <ArrowUp size={20} strokeWidth={1.9} aria-hidden="true" />
+            </a>
           </div>
         </div>
       </footer>

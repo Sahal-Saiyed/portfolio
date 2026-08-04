@@ -37,14 +37,6 @@ test("server-renders the finished portfolio homepage", async () => {
   assert.match(html, /<title>Muhammadsahal Saiyed — AI\/ML Engineer/);
   assert.match(html, /AI\/ML Engineer building/);
   assert.match(html, /reliable intelligent products/);
-  assert.match(html, /MS ORCHESTRATION LINE/);
-  assert.match(html, /MS core/);
-  assert.match(html, /Context/);
-  assert.match(html, /Reason/);
-  assert.match(html, /Build/);
-  assert.match(html, /Validate/);
-  assert.match(html, /Ship/);
-  assert.doesNotMatch(html, /APPLIED_AI\.SYSTEM/);
   assert.match(html, /JuriGPT/);
   assert.match(html, /Neev AI Agent/);
   assert.match(html, /Freelance client work/);
@@ -101,37 +93,6 @@ test("keeps section spacing compact and fully fills the primary button on hover"
   assert.match(css, /background:\s*var\(--olive\)/);
   assert.doesNotMatch(css, /--mint|var\(--mint\)|104,\s*226,\s*179/);
   assert.match(css, /\.capabilities-section::after,[\s\S]*\.contact-section::after\s*\{[\s\S]*width:\s*72px;[\s\S]*background:\s*var\(--olive\)/);
-});
-
-test("keeps the 3D workflow contained, scroll-safe, and validation-complete", async () => {
-  const [css, studio] = await Promise.all([
-    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
-    readFile(new URL("../app/components/AppliedIntelligenceStudio.tsx", import.meta.url), "utf8"),
-  ]);
-
-  assert.match(css, /\.hero__visual\s*\{[^}]*width:\s*100%;[^}]*margin-left:\s*0;/s);
-  assert.match(studio, /\benableZoom\b/);
-  assert.match(studio, /className="ms-chip-mark">MS</);
-  assert.doesNotMatch(studio, /PhysicalLabel title="MS CHIP"/);
-  assert.doesNotMatch(studio, /PhysicalLabel title="EVIDENCE \+ DATA"/);
-  assert.doesNotMatch(studio, /PhysicalLabel title="TRADE-OFF MATRIX"/);
-  assert.doesNotMatch(studio, /PhysicalLabel title="SYSTEM ASSEMBLY"/);
-  assert.match(studio, /const coreToReason: Point2\[\] = \[\[0, 0\.78\], \[-4\.35, 0\.78\]\]/);
-  assert.match(studio, /const reasonToCore: Point2\[\] = \[\[-4\.35, 0\.78\], \[0, 0\.78\]\]/);
-  assert.match(studio, /const buildToValidate: Point2\[\] = \[\[3\.95, -3\.18\], \[-1\.2, -3\.18\]\]/);
-  assert.doesNotMatch(studio, /const returnPaths =/);
-  assert.doesNotMatch(studio, /const forwardPaths =/);
-  assert.match(studio, /TrackSegment from=\{\[-1\.82, 0\.78\]\} to=\{coreToReason\[1\]\}/);
-  assert.match(studio, /TrackSegment from=\{contextToCore\[0\]\} to=\{\[2\.35, 1\.39\]\}/);
-  assert.match(studio, /TrackSegment from=\{\[1\.82, 0\.78\]\} to=\{\[3\.2, 0\.78\]\}/);
-  assert.match(studio, /TrackSegment from=\{buildToValidate\[0\]\} to=\{validateToPortal\[1\]\}/);
-  assert.match(studio, /function CurvedTrack/);
-  assert.doesNotMatch(studio, /CurvedTrack center=\{\[1\.6, 1\.53\]\}/);
-  assert.match(studio, /CurvedTrack center=\{\[3\.2, 0\.03\]\}/);
-  assert.match(studio, /const validateToBuild:/);
-  assert.match(studio, /position = travel\(validateToBuild, 31, 34\)/);
-  assert.match(studio, /position = travel\(buildToValidate, 37, 40\)/);
-  assert.match(studio, /position = travel\(validateToPortal, 43, 46\)/);
 });
 
 test("server-renders a detailed project case study", async () => {

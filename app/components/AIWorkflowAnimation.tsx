@@ -32,7 +32,7 @@ export function AIWorkflowAnimation({ interactive = true }: AIWorkflowAnimationP
           stencil: false,
         }}
         onCreated={({ gl }) => {
-          gl.setClearColor("#05080e", 1);
+          gl.setClearColor("#050b09", 1);
           gl.outputColorSpace = THREE.SRGBColorSpace;
           gl.toneMapping = THREE.ACESFilmicToneMapping;
           gl.toneMappingExposure = 1.08;

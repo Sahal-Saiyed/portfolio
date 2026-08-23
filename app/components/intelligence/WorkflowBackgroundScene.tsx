@@ -221,10 +221,10 @@ function NeuralStructure({ reducedMotion }: { reducedMotion: boolean }) {
   return (
     <group ref={groupRef}>
       <lineSegments geometry={lineGeometry}>
-        <lineBasicMaterial ref={lineMaterialRef} color="#66cfff" transparent opacity={0} depthWrite={false} blending={THREE.AdditiveBlending} />
+        <lineBasicMaterial ref={lineMaterialRef} color="#66e3c0" transparent opacity={0} depthWrite={false} blending={THREE.AdditiveBlending} />
       </lineSegments>
       <points geometry={nodeGeometry}>
-        <pointsMaterial ref={pointMaterialRef} color="#dffaff" size={0.055} transparent opacity={0} depthWrite={false} blending={THREE.AdditiveBlending} />
+        <pointsMaterial ref={pointMaterialRef} color="#eafbf3" size={0.055} transparent opacity={0} depthWrite={false} blending={THREE.AdditiveBlending} />
       </points>
     </group>
   );
@@ -256,17 +256,17 @@ function EmbeddingAndCore({ reducedMotion }: { reducedMotion: boolean }) {
     <group ref={groupRef}>
       <mesh>
         <boxGeometry args={[2.25, 2.25, 2.25, 2, 2, 2]} />
-        <meshBasicMaterial ref={cubeMaterialRef} color="#64cfff" wireframe transparent opacity={0} depthWrite={false} blending={THREE.AdditiveBlending} />
+        <meshBasicMaterial ref={cubeMaterialRef} color="#64d9b4" wireframe transparent opacity={0} depthWrite={false} blending={THREE.AdditiveBlending} />
       </mesh>
       <mesh>
         <icosahedronGeometry args={[0.72, 3]} />
-        <meshBasicMaterial ref={coreMaterialRef} color="#78ddff" transparent opacity={0} depthWrite={false} blending={THREE.AdditiveBlending} />
+        <meshBasicMaterial ref={coreMaterialRef} color="#78e4be" transparent opacity={0} depthWrite={false} blending={THREE.AdditiveBlending} />
       </mesh>
       <mesh scale={1.34}>
         <icosahedronGeometry args={[0.72, 1]} />
-        <meshBasicMaterial ref={shellMaterialRef} color="#8a72e8" wireframe transparent opacity={0} depthWrite={false} blending={THREE.AdditiveBlending} />
+        <meshBasicMaterial ref={shellMaterialRef} color="#bfd37e" wireframe transparent opacity={0} depthWrite={false} blending={THREE.AdditiveBlending} />
       </mesh>
-      <pointLight ref={lightRef} color="#68d9ff" intensity={0} distance={5} />
+      <pointLight ref={lightRef} color="#68dfb8" intensity={0} distance={5} />
     </group>
   );
 }
@@ -292,7 +292,7 @@ function InferenceWaves({ reducedMotion }: { reducedMotion: boolean }) {
       {Array.from({ length: 4 }, (_, index) => (
         <mesh key={index} ref={(node) => { ringRefs.current[index] = node; }}>
           <ringGeometry args={[0.98, 1, 96]} />
-          <meshBasicMaterial color={index % 2 === 0 ? "#60d8ff" : "#8d72e4"} transparent opacity={0} side={THREE.DoubleSide} depthWrite={false} blending={THREE.AdditiveBlending} />
+          <meshBasicMaterial color={index % 2 === 0 ? "#60dfba" : "#b9cf79"} transparent opacity={0} side={THREE.DoubleSide} depthWrite={false} blending={THREE.AdditiveBlending} />
         </mesh>
       ))}
     </group>
@@ -329,13 +329,13 @@ function AgentOrbit({ reducedMotion }: { reducedMotion: boolean }) {
       {[1.45, 1.78, 2.08].map((radius, index) => (
         <mesh key={radius} rotation={[Math.PI / 2 + index * 0.2, index * 0.32, 0]}>
           <torusGeometry args={[radius, 0.008, 8, 112]} />
-          <meshBasicMaterial ref={(material) => { ringMaterialRefs.current[index] = material; }} color={index === 1 ? "#8b72e3" : "#68d9ff"} transparent opacity={0} depthWrite={false} blending={THREE.AdditiveBlending} />
+          <meshBasicMaterial ref={(material) => { ringMaterialRefs.current[index] = material; }} color={index === 1 ? "#bfcf7c" : "#68dfb8"} transparent opacity={0} depthWrite={false} blending={THREE.AdditiveBlending} />
         </mesh>
       ))}
       {nodes.map((position, index) => (
         <mesh position={position} key={index}>
           {index % 3 === 0 ? <boxGeometry args={[0.13, 0.13, 0.13]} /> : index % 3 === 1 ? <octahedronGeometry args={[0.1, 0]} /> : <sphereGeometry args={[0.085, 14, 14]} />}
-          <meshBasicMaterial ref={(material) => { nodeMaterialRefs.current[index] = material; }} color={index % 2 === 0 ? "#8ce8ff" : "#9b81ec"} transparent opacity={0} depthWrite={false} blending={THREE.AdditiveBlending} />
+          <meshBasicMaterial ref={(material) => { nodeMaterialRefs.current[index] = material; }} color={index % 2 === 0 ? "#93edcb" : "#cbd98a"} transparent opacity={0} depthWrite={false} blending={THREE.AdditiveBlending} />
         </mesh>
       ))}
     </group>
@@ -390,11 +390,11 @@ function CameraDrift({ interactive, reducedMotion }: WorkflowBackgroundSceneProp
 export function WorkflowBackgroundScene(props: WorkflowBackgroundSceneProps) {
   return (
     <>
-      <color attach="background" args={["#05080e"]} />
-      <fog attach="fog" args={["#05080e", 6.5, 12]} />
-      <ambientLight intensity={0.13} color="#a9d9ff" />
-      <pointLight position={[2.6, 2.4, 2.8]} color="#69dcff" intensity={1.25} distance={8} />
-      <pointLight position={[-2.2, -1.6, 1.6]} color="#7357cc" intensity={0.85} distance={7} />
+      <color attach="background" args={["#050b09"]} />
+      <fog attach="fog" args={["#050b09", 6.5, 12]} />
+      <ambientLight intensity={0.13} color="#a9e3d2" />
+      <pointLight position={[2.6, 2.4, 2.8]} color="#69e0bb" intensity={1.25} distance={8} />
+      <pointLight position={[-2.2, -1.6, 1.6]} color="#8fa34e" intensity={0.85} distance={7} />
       <WorkflowRig {...props} />
       <CameraDrift {...props} />
     </>

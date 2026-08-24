@@ -226,31 +226,20 @@ export function Preloader() {
             </defs>
 
             {allLinks.map((e, i) => (
-              <g key={`l${i}`}>
-                <line
-                  x1={e.x1}
-                  y1={e.y1}
-                  x2={e.x2}
-                  y2={e.y2}
-                  pathLength={1}
-                  className="pldr__link"
-                  style={{ "--d": `${0.35 + Math.max(e.l, 0) * 0.26 + ((i * 29) % 18) / 100}s` } as React.CSSProperties}
-                />
-                <line
-                  x1={e.x1}
-                  y1={e.y1}
-                  x2={e.x2}
-                  y2={e.y2}
-                  pathLength={1}
-                  className="pldr__pulse"
-                  style={
-                    {
-                      "--w1": `${W1[Math.max(e.l, 0)] + ((i * 37) % 30) / 100}s`,
-                      "--w2": `${W2[Math.max(e.l, 0)] + ((i * 53) % 30) / 100}s`,
-                    } as React.CSSProperties
-                  }
-                />
-              </g>
+              <line
+                key={`l${i}`}
+                x1={e.x1}
+                y1={e.y1}
+                x2={e.x2}
+                y2={e.y2}
+                pathLength={1}
+                className="pldr__link"
+                style={{
+                  "--d": `${0.35 + Math.max(e.l, 0) * 0.26 + ((i * 29) % 18) / 100}s`,
+                  "--w1": `${W1[Math.max(e.l, 0)] + ((i * 37) % 30) / 100}s`,
+                  "--w2": `${W2[Math.max(e.l, 0)] + ((i * 53) % 30) / 100}s`,
+                } as React.CSSProperties}
+              />
             ))}
 
             {LAYERS.map((l, li) =>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const SHOW_MS = 11800;
 const EXIT_MS = 550;
@@ -8,7 +8,6 @@ const CONF_END_MS = 6900;
 const RING_START_MS = 9550;
 const RING_END_MS = 11350;
 const STORAGE_KEY = "preloader-shown";
-const GRID_N = 20;
 
 type Phase = "idle" | "run" | "exit";
 
@@ -25,36 +24,6 @@ function nodeY(i: number, n: number) {
 
 function easeInOutCubic(t: number) {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-}
-
-function buildPattern(): boolean[] {
-  try {
-    const off = document.createElement("canvas");
-    off.width = GRID_N;
-    off.height = GRID_N;
-    const ctx = off.getContext("2d", { willReadFrequently: true });
-    if (!ctx) return [];
-    const s = GRID_N / 280;
-    ctx.save();
-    ctx.translate(140 * s, 126 * s);
-    ctx.scale(s, s);
-    ctx.translate(-140, -128);
-    ctx.lineWidth = 42;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.strokeStyle = "#fff";
-    ctx.stroke(new Path2D("M40 176 V72 L95 140 L150 72 V176"));
-    ctx.stroke(
-      new Path2D(
-        "M232 88 C224 70 198 60 178 65 C155 71 144 85 147 101 C150 118 173 123 189 129 C209 136 221 147 219 163 C217 181 192 191 170 186 C154 182 143 173 140 160"
-      )
-    );
-    ctx.restore();
-    const data = ctx.getImageData(0, 0, GRID_N, GRID_N).data;
-    return Array.from({ length: GRID_N * GRID_N }, (_, i) => data[i * 4] > 96);
-  } catch {
-    return [];
-  }
 }
 
 export function Preloader() {
@@ -104,8 +73,6 @@ export function Preloader() {
       document.documentElement.classList.remove("pldr-lock");
     };
   }, []);
-
-  const cells = useMemo(() => (phase === "idle" ? [] : buildPattern()), [phase]);
 
   useEffect(() => {
     if (phase === "idle") return;
@@ -326,38 +293,12 @@ export function Preloader() {
 
           <div className="pldr__specimen">
             <div className="pldr__scanline" />
-            <div className="pldr__grid">
-              {cells.map((on, i) => {
-                const col = i % GRID_N;
-                const u = col / (GRID_N - 1);
-                const stops = [
-                  [167, 178, 100],
-                  [47, 169, 140],
-                  [124, 232, 200],
-                ];
-                const seg = Math.min(1, u * 2);
-                const idx = Math.min(1, Math.floor(u * 2));
-                const a = stops[idx];
-                const b = stops[idx + 1];
-                const bg = on
-                  ? `rgb(${Math.round(a[0] + (b[0] - a[0]) * seg)},${Math.round(
-                      a[1] + (b[1] - a[1]) * seg
-                    )},${Math.round(a[2] + (b[2] - a[2]) * seg)})`
-                  : undefined;
-                return (
-                  <span
-                    key={i}
-                    className={`pldr__cell${on ? " pldr__cell--on" : ""}`}
-                    style={
-                      {
-                        background: bg,
-                        "--cd": `${(0.95 + col * 0.052 + (i % GRID_N === col ? 0 : 0.004)).toFixed(3)}s`,
-                      } as React.CSSProperties
-                    }
-                  />
-                );
-              })}
-            </div>
+            <img
+              src="/monogram.png"
+              alt="MS monogram"
+              className="pldr__monogram"
+              aria-hidden="true"
+            />
           </div>
           <span className="pldr__specimen-label">specimen · ms_00</span>
           <span className="pldr__layer-label pldr__layer-label--input">input · 400px</span>
@@ -377,6 +318,7 @@ export function Preloader() {
       </div>
 
       <svg className="pldr__portalfx" width="100%" height="100%" aria-hidden="true">
+        <circle data-oring r="14" className="pldr__oring pldr__oring--glow" fill="none" stroke="url(#pldr-spark)" strokeWidth="18" strokeOpacity="0.22" />
         <circle data-oring r="14" className="pldr__oring pldr__oring--main" fill="none" stroke="url(#pldr-spark)" strokeWidth="6" />
         <circle data-oring r="14" className="pldr__oring pldr__oring--s1" fill="none" stroke="#ffdf9e" strokeWidth="2.5" strokeDasharray="34 130" />
         <circle data-oring r="14" className="pldr__oring pldr__oring--s2" fill="none" stroke="#e8925a" strokeWidth="1.5" strokeDasharray="16 210" />

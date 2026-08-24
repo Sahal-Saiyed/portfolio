@@ -58,7 +58,8 @@ function buildPattern(): boolean[] {
 }
 
 export function Preloader() {
-  const [phase, setPhase] = useState<Phase>("idle");
+  const [phase, setPhase] = useState<Phase>("run");
+  const [mounted, setMounted] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
@@ -86,11 +87,17 @@ export function Preloader() {
     } catch {
       skip = true;
     }
-    if (skip) return;
 
-    document.documentElement.classList.add("pldr-lock");
+    const startTimer = setTimeout(() => {
+      setMounted(true);
+      if (skip) {
+        document.documentElement.classList.remove("pldr-lock");
+        setPhase("idle");
+        return;
+      }
+      setPhase("run");
+    }, 0);
 
-    const startTimer = setTimeout(() => setPhase("run"), 0);
     const exitTimer = setTimeout(() => setPhase("exit"), SHOW_MS - EXIT_MS);
     const doneTimer = setTimeout(() => {
       document.documentElement.classList.remove("pldr-lock");
@@ -101,11 +108,10 @@ export function Preloader() {
       clearTimeout(startTimer);
       clearTimeout(exitTimer);
       clearTimeout(doneTimer);
-      document.documentElement.classList.remove("pldr-lock");
     };
   }, []);
 
-  const cells = useMemo(() => (phase === "idle" ? [] : buildPattern()), [phase]);
+  const cells = useMemo(() => (mounted ? buildPattern() : []), [mounted]);
 
   useEffect(() => {
     if (phase === "idle") return;
@@ -362,6 +368,7 @@ export function Preloader() {
           <span className="pldr__specimen-label">specimen · ms_00</span>
           <span className="pldr__layer-label pldr__layer-label--input">input · 400px</span>
 
+          <div className="pldr__winner-halo" aria-hidden="true" />
           <div className="pldr__winner-rings" aria-hidden="true">
             <i />
             <i />

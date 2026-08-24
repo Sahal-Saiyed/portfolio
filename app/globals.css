@@ -2734,6 +2734,14 @@ html.pldr-skip .pldr {
   width: 1200px;
   height: 700px;
   transform: translate(-50%, -50%);
+  animation: pldr-world-out 0.38s ease-in 9.5s forwards;
+}
+
+@keyframes pldr-world-out {
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.015);
+  }
 }
 
 .pldr__world {
@@ -3115,7 +3123,7 @@ html.pldr-skip .pldr {
   inset: 0;
   z-index: 5;
   pointer-events: none;
-  animation: pldr-hud-out 0.5s ease 9.55s forwards;
+  animation: pldr-hud-out 0.28s ease 9.42s forwards;
 }
 
 .pldr__hud-item {

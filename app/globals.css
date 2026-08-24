@@ -2970,7 +2970,7 @@ html.pldr-lock {
   gap: 8px;
   text-align: center;
   opacity: 0;
-  animation: pldr-verdict-in 0.75s cubic-bezier(0.22, 1, 0.36, 1) 6.9s
+  animation: pldr-verdict-in 0.75s cubic-bezier(0.22, 1, 0.36, 1) 2.5s
     forwards;
 }
 
@@ -3057,7 +3057,7 @@ html.pldr-lock {
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
-  animation: pldr-fade-in 0.2s linear 9.55s forwards;
+  animation: pldr-fade-in 0.2s linear 3.5s forwards;
 }
 
 .pldr__oring--main {
@@ -3071,14 +3071,14 @@ html.pldr-lock {
 
 .pldr__oring--s1 {
   animation:
-    pldr-fade-in 0.2s linear 9.55s forwards,
-    pldr-spin-cw 0.9s linear 9.55s infinite;
+    pldr-fade-in 0.2s linear 3.5s forwards,
+    pldr-spin-cw 0.9s linear 3.5s infinite;
 }
 
 .pldr__oring--s2 {
   animation:
-    pldr-fade-in 0.2s linear 9.58s forwards,
-    pldr-spin-ccw 1.5s linear 9.55s infinite;
+    pldr-fade-in 0.2s linear 3.53s forwards,
+    pldr-spin-ccw 1.5s linear 3.5s infinite;
 }
 
 @keyframes pldr-spin-cw {
@@ -3098,7 +3098,7 @@ html.pldr-lock {
   inset: 0;
   z-index: 5;
   pointer-events: none;
-  animation: pldr-hud-out 0.28s ease 9.42s forwards;
+  animation: pldr-hud-out 0.28s ease 3.2s forwards;
 }
 
 .pldr__hud-item {

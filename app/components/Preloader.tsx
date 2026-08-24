@@ -2,11 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const SHOW_MS = 11800;
-const EXIT_MS = 550;
-const CONF_END_MS = 6900;
-const RING_START_MS = 9550;
-const RING_END_MS = 11350;
+const SHOW_MS = 5000;
+const EXIT_MS = 300;
+const CONF_END_MS = 3000;
+const RING_START_MS = 3500;
+const RING_END_MS = 4700;
 const STORAGE_KEY = "preloader-shown";
 
 type Phase = "idle" | "run" | "exit";
@@ -202,8 +202,8 @@ export function Preloader() {
     ...edges,
   ];
 
-  const W1 = [2.65, 3.15, 3.65, 4.15, 4.65];
-  const W2 = [4.75, 5.25, 5.75, 6.25, 6.75];
+  const W1 = [0.9, 1.2, 1.5, 1.8, 2.1];
+  const W2 = [2.3, 2.6, 2.9, 3.2, 3.5];
 
   return (
     <div

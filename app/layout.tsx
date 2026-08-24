@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { headers } from "next/headers";
 import { SiteScrollProgress } from "./components/SiteScrollProgress";
+import { Preloader } from "./components/Preloader";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -112,6 +113,7 @@ export default async function RootLayout({
         <a className="skip-link" href="#main-content">
           Skip to content
         </a>
+        <Preloader />
         <div id="main-content">{children}</div>
         <SiteScrollProgress />
         <script

@@ -110,6 +110,11 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(sessionStorage.getItem("preloader-shown")||matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.classList.add("pldr-skip")}else{document.documentElement.classList.add("pldr-lock")}}catch(e){}`,
+          }}
+        />
         <a className="skip-link" href="#main-content">
           Skip to content
         </a>

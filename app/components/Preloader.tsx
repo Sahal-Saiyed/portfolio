@@ -27,7 +27,7 @@ function easeInOutCubic(t: number) {
 }
 
 export function Preloader() {
-  const [phase, setPhase] = useState<Phase>("idle");
+  const [phase, setPhase] = useState<Phase>("run");
   const rootRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
@@ -55,7 +55,13 @@ export function Preloader() {
     } catch {
       skip = true;
     }
-    if (skip) return;
+    if (skip) {
+      const skipTimer = setTimeout(() => {
+        document.documentElement.classList.remove("pldr-lock");
+        setPhase("idle");
+      }, 0);
+      return () => clearTimeout(skipTimer);
+    }
 
     document.documentElement.classList.add("pldr-lock");
 

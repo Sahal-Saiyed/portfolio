@@ -2697,6 +2697,10 @@ html.pldr-lock {
   overflow: hidden;
 }
 
+html.pldr-skip .pldr {
+  display: none !important;
+}
+
 .pldr {
   position: fixed;
   z-index: 400;

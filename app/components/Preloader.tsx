@@ -304,7 +304,6 @@ export function Preloader() {
           </div>
 
           <div className="pldr__verdict">
-            <strong>MS · 99.2%</strong>
             <span>Muhammadsahal Saiyed — AI/ML Engineer</span>
           </div>
 

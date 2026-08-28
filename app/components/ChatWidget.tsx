@@ -6,7 +6,11 @@ import { X, Send, User, ExternalLink, ArrowRight, RotateCcw, Sparkles, Maximize2
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { lazy, Suspense } from "react";
+
+const DotLottieReact = lazy(() => 
+  import("@lottiefiles/dotlottie-react").then((mod) => ({ default: mod.DotLottieReact }))
+);
 
 interface Message {
   id: string;
@@ -61,12 +65,14 @@ function EveMascot() {
 
   return (
     <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto -mb-1 flex items-center justify-center pointer-events-none select-none">
-      <DotLottieReact
-        src={EVE_LOTTIE_URL}
-        loop
-        autoplay
-        className="w-full h-full object-contain"
-      />
+      <Suspense fallback={<div className="w-full h-full" />}>
+        <DotLottieReact
+          src={EVE_LOTTIE_URL}
+          loop
+          autoplay
+          className="w-full h-full object-contain"
+        />
+      </Suspense>
     </div>
   );
 }
@@ -261,6 +267,7 @@ export default function ChatWidget() {
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let assistantResponse = "";
+      let buffer = "";
       const assistantId = (Date.now() + 1).toString();
 
       setMessages((prev) => [
@@ -272,8 +279,24 @@ export default function ChatWidget() {
         const { done, value } = await reader.read();
         if (done) break;
 
-        const chunk = decoder.decode(value, { stream: true });
-        assistantResponse += chunk;
+        buffer += decoder.decode(value, { stream: true });
+        const parts = buffer.split('\n\n');
+        buffer = parts.pop() || "";
+        
+        for (const part of parts) {
+          if (part.startsWith('data: ')) {
+            const dataStr = part.slice(6);
+            if (dataStr.trim() === '[DONE]') continue;
+            
+            try {
+              const data = JSON.parse(dataStr);
+              const text = data.choices?.[0]?.delta?.content || "";
+              assistantResponse += text;
+            } catch (e) {
+              console.warn("Failed to parse stream chunk", e);
+            }
+          }
+        }
 
         setMessages((prev) =>
           prev.map((msg) =>

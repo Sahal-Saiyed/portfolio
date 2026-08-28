@@ -1,5 +1,3 @@
-import { createGroq } from '@ai-sdk/groq';
-import { streamText } from 'ai';
 import { knowledgeBase } from './knowledge';
 
 export const runtime = 'edge';
@@ -19,17 +17,38 @@ export async function POST(req: Request) {
       );
     }
 
-    const groq = createGroq({
-      apiKey: apiKey,
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "llama-3.3-70b-versatile",
+        messages: [
+          { role: "system", content: knowledgeBase },
+          ...messages
+        ],
+        stream: true,
+      })
     });
 
-    const result = streamText({
-      model: groq('qwen/qwen3.6-27b'),
-      system: knowledgeBase,
-      messages,
-    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      return new Response(
+        JSON.stringify({ error: `Groq API Error: ${response.status} - ${errorText}` }),
+        { status: response.status, headers: { "Content-Type": "application/json" } }
+      );
+    }
 
-    return result.toTextStreamResponse();
+    // Proxy the stream directly to the client (0ms CPU time in Cloudflare Workers)
+    return new Response(response.body, {
+      headers: {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        "Connection": "keep-alive"
+      }
+    });
   } catch (error: any) {
     console.error("Chat API route error:", error);
     return new Response(

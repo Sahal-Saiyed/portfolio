@@ -52,6 +52,13 @@ function EveAvatar({ className }: { className?: string }) {
 
 // Eve Mascot in Full Waving Welcome State
 function EveMascot() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) {
+    return <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto -mb-1" />;
+  }
+
   return (
     <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto -mb-1 flex items-center justify-center pointer-events-none select-none">
       <DotLottieReact

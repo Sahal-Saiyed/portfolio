@@ -76,6 +76,8 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+import ChatWidget from "./components/ChatWidget";
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -125,6 +127,7 @@ export default async function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
         />
+        <ChatWidget />
       </body>
     </html>
   );

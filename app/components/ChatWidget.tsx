@@ -30,8 +30,8 @@ const STORAGE_KEY_OPEN = "portfolio_chat_is_open_v1";
 
 const EVE_LOTTIE_URL = "https://lottie.host/d33f8af3-7d36-420d-aabf-b331bd88d32f/XHTDZiyXbX.json";
 
-// Regex to capture Unicode emojis across scripts
-const EMOJI_REGEX = /(\p{Extended_Pictographic}+)/gu;
+// Regex to capture Unicode emojis across scripts (supports ZWJ sequences, modifiers, and separates adjacent emojis)
+const EMOJI_REGEX = /((?:\p{Extended_Pictographic}(?:\p{Emoji_Modifier}|\ufe0f)?(?:(?:\u200d)\p{Extended_Pictographic}(?:\p{Emoji_Modifier}|\ufe0f)?)*))/gu;
 
 // Dynamically resolve any emoji character to its official animated WebP by hex codepoint
 function emojiToHex(emoji: string): string {
@@ -111,6 +111,14 @@ function renderTextWithEmojis(text: string): React.ReactNode {
       })}
     </>
   );
+}
+
+function renderChildrenWithEmojis(children: React.ReactNode): React.ReactNode {
+  if (typeof children === "string") return renderTextWithEmojis(children);
+  if (Array.isArray(children)) {
+    return children.map((c, i) => (typeof c === "string" ? renderTextWithEmojis(c) : c));
+  }
+  return children;
 }
 
 // Helper to strip thinking tags and extract [[NAVIGATE:...]] and [[LOG_UNANSWERED:...]] tokens
@@ -303,8 +311,8 @@ export default function ChatWidget() {
       }
 
       // Check if assistant response triggered question logging
-      const { loggedQuestion } = parseNavigationToken(assistantResponse);
-      if (loggedQuestion || assistantResponse.includes("[[LOG_UNANSWERED")) {
+      const { loggedQuestion, cleanText } = parseNavigationToken(assistantResponse);
+      if (loggedQuestion || cleanText.includes("[[LOG_UNANSWERED")) {
         fetch("/api/log-question", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -455,7 +463,7 @@ export default function ChatWidget() {
                         }`}
                       >
                         {m.role === "user" ? (
-                          cleanText
+                          renderChildrenWithEmojis(cleanText)
                         ) : (
                           <div className="space-y-2">
                             <ReactMarkdown
@@ -463,30 +471,22 @@ export default function ChatWidget() {
                               components={{
                                 p: ({ children }) => (
                                   <p className="mb-2 last:mb-0 leading-relaxed">
-                                    {Array.isArray(children)
-                                      ? children.map((c, i) => (typeof c === "string" ? renderTextWithEmojis(c) : c))
-                                      : typeof children === "string"
-                                      ? renderTextWithEmojis(children)
-                                      : children}
+                                    {renderChildrenWithEmojis(children)}
                                   </p>
                                 ),
                                 li: ({ children }) => (
                                   <li className="leading-snug text-[#14211c]">
-                                    {Array.isArray(children)
-                                      ? children.map((c, i) => (typeof c === "string" ? renderTextWithEmojis(c) : c))
-                                      : typeof children === "string"
-                                      ? renderTextWithEmojis(children)
-                                      : children}
+                                    {renderChildrenWithEmojis(children)}
                                   </li>
                                 ),
                                 ul: ({ children }) => <ul className="list-disc pl-4 space-y-1 my-2 text-[#40514a]">{children}</ul>,
                                 ol: ({ children }) => <ol className="list-decimal pl-4 space-y-1 my-2 text-[#40514a]">{children}</ol>,
-                                h1: ({ children }) => <h1 className="text-sm font-semibold text-[#14211c] mb-1.5 mt-2">{children}</h1>,
-                                h2: ({ children }) => <h2 className="text-xs font-semibold text-[#14211c] mb-1.5 mt-2">{children}</h2>,
-                                h3: ({ children }) => <h3 className="text-[11px] font-mono uppercase tracking-wider text-[#1f7a6d] font-semibold mb-1 mt-2">{children}</h3>,
+                                h1: ({ children }) => <h1 className="text-sm font-semibold text-[#14211c] mb-1.5 mt-2">{renderChildrenWithEmojis(children)}</h1>,
+                                h2: ({ children }) => <h2 className="text-xs font-semibold text-[#14211c] mb-1.5 mt-2">{renderChildrenWithEmojis(children)}</h2>,
+                                h3: ({ children }) => <h3 className="text-[11px] font-mono uppercase tracking-wider text-[#1f7a6d] font-semibold mb-1 mt-2">{renderChildrenWithEmojis(children)}</h3>,
                                 strong: ({ children }) => (
                                   <strong className="font-semibold text-[#10201c]">
-                                    {typeof children === "string" ? renderTextWithEmojis(children) : children}
+                                    {renderChildrenWithEmojis(children)}
                                   </strong>
                                 ),
                                 code: ({ children }) => (

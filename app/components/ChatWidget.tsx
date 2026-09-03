@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { X, Send, User, ExternalLink, ArrowRight, RotateCcw, Sparkles, Maximize2, Minimize2 } from "lucide-react";
+import { X, Send, User, ExternalLink, ArrowRight, RotateCcw, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -150,22 +150,17 @@ function parseNavigationToken(content: string): { cleanText: string; navPath?: s
 export default function ChatWidget() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const [isEnlarged, setIsEnlarged] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Toggle body class when enlarged
   useEffect(() => {
-    if (isEnlarged && isOpen) {
-      document.body.classList.add("chat-enlarged");
-    } else {
-      document.body.classList.remove("chat-enlarged");
-    }
-    return () => document.body.classList.remove("chat-enlarged");
-  }, [isEnlarged, isOpen]);
+    const handleOpen = () => setIsOpen(true);
+    window.addEventListener("open-shiori-chat", handleOpen);
+    return () => window.removeEventListener("open-shiori-chat", handleOpen);
+  }, []);
 
   // Restore session from sessionStorage on mount
   useEffect(() => {
@@ -352,25 +347,18 @@ export default function ChatWidget() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            layoutId="chat-widget-morph"
-            initial={{ opacity: 0, borderRadius: 99 }}
-            animate={{ opacity: 1, borderRadius: isEnlarged ? 0 : 26 }}
-            exit={{ opacity: 0, borderRadius: 99 }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            style={{
-              right: isEnlarged ? 0 : 'max(1.5rem, calc(50vw - 590px + 1.5rem))',
-            }}
-            className={`font-sans flex flex-col shadow-[0_28px_80px_rgba(20,33,28,0.28)] border border-[rgba(20,33,28,0.14)] bg-[#f2f4ec]/95 backdrop-blur-[24px] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-              isEnlarged
-                ? "fixed top-0 right-0 w-full sm:w-[max(25vw,320px)] h-[100dvh] rounded-none border-y-0 border-r-0 z-[300]"
-                : "fixed bottom-4 sm:bottom-6 w-[calc(100vw-32px)] sm:w-[410px] max-w-[420px] h-[min(540px,calc(100dvh-150px))] min-h-[320px] rounded-[24px] sm:rounded-[26px] overflow-hidden z-[300]"
-            }`}
+            layoutId="chat-widget-drawer"
+            initial={{ opacity: 0, x: "100%" }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: "100%" }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="font-sans flex flex-col shadow-[-20px_0_80px_rgba(20,33,28,0.28)] border border-[rgba(20,33,28,0.14)] bg-[#f2f4ec]/98 backdrop-blur-[24px] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] fixed top-0 right-0 w-[calc(100vw-32px)] sm:w-[420px] h-[100dvh] rounded-none sm:rounded-l-[24px] border-y-0 border-r-0 overflow-hidden z-[300]"
           >
             {/* Header matching portfolio navy container style */}
             <div className="p-3.5 sm:p-4 bg-[#10201c] text-[#f2f4ec] flex justify-between items-center border-b border-[#173029]/80 shrink-0">
               <div className="flex items-center gap-2.5 sm:gap-3">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#173029] border border-[rgba(255,255,255,0.18)] flex items-center justify-center text-white shadow-[0_4px_12px_rgba(31,122,109,0.25)] overflow-hidden">
-                  <EveAvatar className="w-7 h-7 sm:w-8 sm:h-8" />
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-white shadow-[0_4px_12px_rgba(31,122,109,0.25)] overflow-hidden">
+                  <EveAvatar className="w-7 h-7 sm:w-8 sm:h-8 scale-110" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
@@ -394,14 +382,6 @@ export default function ChatWidget() {
                     <RotateCcw size={14} />
                   </button>
                 )}
-                <button
-                  onClick={() => setIsEnlarged(!isEnlarged)}
-                  className="text-[#96a89f] hover:text-white transition-colors p-1.5 rounded-full hover:bg-[#173029] hidden sm:block"
-                  aria-label={isEnlarged ? "Minimize Chat" : "Enlarge Chat"}
-                  title={isEnlarged ? "Minimize" : "Enlarge"}
-                >
-                  {isEnlarged ? <Minimize2 size={15} /> : <Maximize2 size={15} />}
-                </button>
                 <button
                   onClick={() => setIsOpen(false)}
                   className="text-[#96a89f] hover:text-white transition-colors p-1.5 rounded-full hover:bg-[#173029]"
@@ -441,6 +421,9 @@ export default function ChatWidget() {
               {messages.map((m) => {
                 const { cleanText, navPath } = parseNavigationToken(m.content);
 
+                // Hide assistant messages that only contain thinking tags (no text yet)
+                if (m.role === "assistant" && !cleanText) return null;
+
                 return (
                   <div
                     key={m.id}
@@ -450,13 +433,13 @@ export default function ChatWidget() {
                       className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 shadow-xs overflow-hidden ${
                         m.role === "user"
                           ? "bg-[#173029] border border-[rgba(255,255,255,0.15)] text-[#bff2dc]"
-                          : "bg-[#173029] border border-[rgba(255,255,255,0.1)]"
+                          : ""
                       }`}
                     >
                       {m.role === "user" ? (
                         <User size={12} className="text-[#bff2dc]" />
                       ) : (
-                        <EveAvatar className="w-5 h-5 sm:w-6 sm:h-6" />
+                        <EveAvatar className="w-5 h-5 sm:w-6 sm:h-6 scale-110" />
                       )}
                     </div>
                     <div
@@ -560,10 +543,13 @@ export default function ChatWidget() {
                 );
               })}
 
-              {isLoading && messages[messages.length - 1]?.role === "user" && (
+              {isLoading && (
+                messages[messages.length - 1]?.role === "user" || 
+                (messages[messages.length - 1]?.role === "assistant" && !parseNavigationToken(messages[messages.length - 1].content).cleanText)
+              ) && (
                 <div className="flex gap-2 sm:gap-2.5">
-                  <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-[#173029] border border-[rgba(255,255,255,0.1)] flex items-center justify-center flex-shrink-0 mt-0.5 shadow-xs overflow-hidden">
-                    <EveAvatar className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 shadow-xs overflow-hidden">
+                    <EveAvatar className="w-5 h-5 sm:w-6 sm:h-6 scale-110" />
                   </div>
                   <div className="bg-white/80 border border-[rgba(20,33,28,0.09)] shadow-xs px-3.5 py-2.5 rounded-[16px] rounded-tl-[4px] flex items-center gap-1.5">
                     <div className="w-1.5 h-1.5 bg-[#1f7a6d] rounded-full animate-bounce [animation-delay:-0.3s]"></div>
@@ -589,40 +575,14 @@ export default function ChatWidget() {
                 <button
                   type="submit"
                   disabled={!input.trim() || isLoading}
-                  className="absolute right-1.5 p-1.5 bg-[#10201c] text-[#bff2dc] disabled:opacity-40 hover:bg-[#173029] rounded-full transition-all cursor-pointer disabled:cursor-not-allowed shadow-xs"
+                  className="absolute right-1.5 w-7 h-7 flex items-center justify-center bg-[#10201c] text-[#bff2dc] disabled:opacity-40 hover:bg-[#a7b264] hover:text-[#10201c] rounded-full transition-all cursor-pointer disabled:cursor-not-allowed shadow-xs"
                   aria-label="Send message"
                 >
-                  <Send size={13} />
+                  <Send size={13} className="-ml-[1px] mt-[1px]" />
                 </button>
               </form>
             </div>
           </motion.div>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {!isOpen && (
-          <motion.button
-            layoutId="chat-widget-morph"
-            initial={{ opacity: 0, scale: 0.8, borderRadius: 99 }}
-            animate={{ opacity: 1, scale: 1, borderRadius: 99 }}
-            exit={{ opacity: 0, scale: 0.8, borderRadius: 99 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.96 }}
-            onClick={() => setIsOpen(true)}
-            aria-label="Open Shiori AI Assistant"
-            style={{ right: 'max(1.5rem, calc(50vw - 590px + 1.5rem))' }}
-            className="fixed bottom-4 sm:bottom-6 z-[250] group flex items-center gap-2.5 px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-full bg-[#10201c] text-[#f2f4ec] border border-[rgba(255,255,255,0.18)] shadow-[0_14px_44px_rgba(20,33,28,0.22)] backdrop-blur-lg hover:border-[#1f7a6d] transition-colors cursor-pointer font-sans"
-          >
-            <div className="relative flex items-center justify-center w-5.5 h-5.5 sm:w-6 sm:h-6 rounded-full bg-[#173029] border border-[rgba(255,255,255,0.1)] overflow-hidden">
-              <EveAvatar className="w-5 h-5" />
-              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#bff2dc] animate-pulse"></span>
-            </div>
-            <span className="text-xs font-medium tracking-tight pr-0.5 sm:pr-1">
-              Ask Shiori
-            </span>
-          </motion.button>
         )}
       </AnimatePresence>
     </>

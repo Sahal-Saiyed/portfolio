@@ -64,14 +64,26 @@ export function Header({ overlayOnHero = false }: HeaderProps) {
         ))}
       </nav>
 
-      <a
-        className="resume-link desktop-resume"
-        href="/Muhammadsahal_Saiyed_Resume.pdf"
-        target="_blank"
-        rel="noreferrer"
-      >
-        Résumé <ArrowUpRight size={15} strokeWidth={1.8} aria-hidden="true" />
-      </a>
+      <div className="flex items-center gap-2 ml-auto">
+        <button
+          className="resume-link desktop-resume !ml-0 cursor-pointer"
+          onClick={() => window.dispatchEvent(new Event('open-shiori-chat'))}
+          aria-label="Ask Shiori"
+        >
+          <div className="w-[22px] h-[22px] rounded-full overflow-hidden shrink-0 flex items-center justify-center -ml-1">
+            <img src="/Eve-static.png" alt="" className="w-full h-full object-cover scale-[1.3] select-none" />
+          </div>
+          Ask Shiori
+        </button>
+        <a
+          className="resume-link desktop-resume !ml-0"
+          href="/Muhammadsahal_Saiyed_Resume.pdf"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Résumé <ArrowUpRight size={15} strokeWidth={1.8} aria-hidden="true" />
+        </a>
+      </div>
 
       <button
         type="button"
@@ -94,6 +106,18 @@ export function Header({ overlayOnHero = false }: HeaderProps) {
               {item.label}
             </a>
           ))}
+          <button
+            className="mobile-resume-link text-left cursor-pointer"
+            onClick={() => {
+              window.dispatchEvent(new Event('open-shiori-chat'));
+              setOpen(false);
+            }}
+          >
+            Ask Shiori 
+            <div className="w-[22px] h-[22px] rounded-full overflow-hidden shrink-0 flex items-center justify-center">
+              <img src="/Eve-static.png" alt="" className="w-full h-full object-cover scale-[1.3] select-none" />
+            </div>
+          </button>
           <a
             className="mobile-resume-link"
             href="/Muhammadsahal_Saiyed_Resume.pdf"

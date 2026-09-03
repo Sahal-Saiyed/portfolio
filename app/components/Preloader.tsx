@@ -261,11 +261,11 @@ export function Preloader() {
               ))
             )}
 
-            {[192, 261, 330, 399, 468].map((y, i) => (
+            {Array.from({ length: 5 }).map((_, i) => (
               <circle
                 key={`o${i}`}
                 cx={1040}
-                cy={y}
+                cy={nodeY(i, 5)}
                 r={i === 2 ? 11 : 7}
                 className={`pldr__node pldr__node--out${i === 2 ? " pldr__node--winner" : ""}`}
                 style={{ "--f1": `${W1[4]}s`, "--f2": `${W2[4]}s` } as React.CSSProperties}

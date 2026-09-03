@@ -30,6 +30,7 @@
 html {
   scroll-behavior: smooth;
   background: var(--paper);
+  overscroll-behavior: none;
 }
 
 body {
@@ -43,6 +44,7 @@ body {
   font-family: var(--font-sans);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
 }
 
 ::selection {
@@ -2393,6 +2395,7 @@ img {
   display: block;
   width: 100%;
   min-height: 100svh;
+  max-height: 1280px;
   overflow: hidden;
   margin-top: 0;
   border: 0;
@@ -2413,6 +2416,7 @@ img {
   z-index: 4;
   display: grid;
   min-height: 100svh;
+  max-height: 1280px;
   grid-template-columns: minmax(0, 540px) minmax(260px, 1fr);
   column-gap: clamp(72px, 8vw, 132px);
   align-items: center;
@@ -2422,7 +2426,12 @@ img {
 
 .hero__background {
   position: absolute;
-  inset: 0;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 2560px;
   z-index: 0;
   overflow: hidden;
   border-radius: 0;

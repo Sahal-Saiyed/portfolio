@@ -357,10 +357,13 @@ export default function ChatWidget() {
             animate={{ opacity: 1, borderRadius: isEnlarged ? 0 : 26 }}
             exit={{ opacity: 0, borderRadius: 99 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            style={{
+              right: isEnlarged ? 0 : 'max(1.5rem, calc(50vw - 590px + 1.5rem))',
+            }}
             className={`font-sans flex flex-col shadow-[0_28px_80px_rgba(20,33,28,0.28)] border border-[rgba(20,33,28,0.14)] bg-[#f2f4ec]/95 backdrop-blur-[24px] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
               isEnlarged
                 ? "fixed top-0 right-0 w-full sm:w-[max(25vw,320px)] h-[100dvh] rounded-none border-y-0 border-r-0 z-[300]"
-                : "fixed bottom-4 sm:bottom-6 right-4 sm:right-6 w-[calc(100vw-32px)] sm:w-[410px] max-w-[420px] h-[min(540px,calc(100dvh-150px))] min-h-[320px] rounded-[24px] sm:rounded-[26px] overflow-hidden z-[300]"
+                : "fixed bottom-4 sm:bottom-6 w-[calc(100vw-32px)] sm:w-[410px] max-w-[420px] h-[min(540px,calc(100dvh-150px))] min-h-[320px] rounded-[24px] sm:rounded-[26px] overflow-hidden z-[300]"
             }`}
           >
             {/* Header matching portfolio navy container style */}
@@ -609,7 +612,8 @@ export default function ChatWidget() {
             whileTap={{ scale: 0.96 }}
             onClick={() => setIsOpen(true)}
             aria-label="Open Shiori AI Assistant"
-            className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[250] group flex items-center gap-2.5 px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-full bg-[#10201c] text-[#f2f4ec] border border-[rgba(255,255,255,0.18)] shadow-[0_14px_44px_rgba(20,33,28,0.22)] backdrop-blur-lg hover:border-[#1f7a6d] transition-colors cursor-pointer font-sans"
+            style={{ right: 'max(1.5rem, calc(50vw - 590px + 1.5rem))' }}
+            className="fixed bottom-4 sm:bottom-6 z-[250] group flex items-center gap-2.5 px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-full bg-[#10201c] text-[#f2f4ec] border border-[rgba(255,255,255,0.18)] shadow-[0_14px_44px_rgba(20,33,28,0.22)] backdrop-blur-lg hover:border-[#1f7a6d] transition-colors cursor-pointer font-sans"
           >
             <div className="relative flex items-center justify-center w-5.5 h-5.5 sm:w-6 sm:h-6 rounded-full bg-[#173029] border border-[rgba(255,255,255,0.1)] overflow-hidden">
               <EveAvatar className="w-5 h-5" />

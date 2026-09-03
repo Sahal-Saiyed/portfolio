@@ -14,14 +14,14 @@ type WorkflowBackgroundSceneProps = {
 };
 
 const TAU = Math.PI * 2;
-const stageDuration = 4.2;
+const stageDuration = 6.5;
 const stageCount = 7;
 
 const networkColumns = [
-  Array.from({ length: 5 }, (_, index) => new THREE.Vector3(-1.75, -1.28 + index * 0.64, Math.sin(index) * 0.18)),
-  Array.from({ length: 7 }, (_, index) => new THREE.Vector3(-0.62, -1.62 + index * 0.54, Math.cos(index * 1.3) * 0.26)),
-  Array.from({ length: 6 }, (_, index) => new THREE.Vector3(0.62, -1.35 + index * 0.54, Math.sin(index * 0.9) * 0.24)),
-  Array.from({ length: 4 }, (_, index) => new THREE.Vector3(1.72, -0.96 + index * 0.64, Math.cos(index) * 0.16)),
+  Array.from({ length: 5 }, (_, i) => new THREE.Vector3(-1.8, (i - 2) * 0.7, 0)),
+  Array.from({ length: 8 }, (_, i) => new THREE.Vector3(-0.6, (i - 3.5) * 0.5, 0)),
+  Array.from({ length: 8 }, (_, i) => new THREE.Vector3(0.6, (i - 3.5) * 0.5, 0)),
+  Array.from({ length: 4 }, (_, i) => new THREE.Vector3(1.8, (i - 1.5) * 0.8, 0)),
 ];
 const networkNodes = networkColumns.flat();
 
@@ -68,33 +68,47 @@ function makeLifecycleGeometry(count: number) {
     const offset = index * 3;
     const seedOffset = index * 4;
     const angle = seeded(index, 2) * TAU;
-    const rawRadius = 1.2 + Math.pow(seeded(index, 5), 0.58) * 3.25;
-    raw[offset] = Math.cos(angle) * rawRadius;
-    raw[offset + 1] = (seeded(index, 7) - 0.5) * 5.1;
-    raw[offset + 2] = Math.sin(angle) * rawRadius * 0.5 + (seeded(index, 11) - 0.5) * 1.1;
+    const rawRadius = 2.0 + Math.pow(seeded(index, 5), 0.8) * 4.0;
+    const rawY = (seeded(index, 7) - 0.5) * 7.0;
+    raw[offset] = Math.cos(angle * 3.0 + rawY * 0.5) * rawRadius;
+    raw[offset + 1] = rawY;
+    raw[offset + 2] = Math.sin(angle * 3.0 + rawY * 0.5) * rawRadius * 0.5 + (seeded(index, 11) - 0.5) * 2.0;
 
-    const column = Math.floor(seeded(index, 13) * 6);
-    const streamY = (seeded(index, 17) - 0.5) * 5.2;
-    stream[offset] = -2.25 + column * 0.86 + Math.sin(streamY * 1.2 + column) * 0.13;
-    stream[offset + 1] = streamY;
-    stream[offset + 2] = (seeded(index, 19) - 0.5) * 0.46;
+    const gridDim = Math.ceil(Math.pow(count, 1/3));
+    const gx = (index % gridDim) - gridDim / 2;
+    const gy = (Math.floor(index / gridDim) % gridDim) - gridDim / 2;
+    const gz = Math.floor(index / (gridDim * gridDim)) - gridDim / 2;
+    stream[offset] = gx * 0.35;
+    stream[offset + 1] = gy * 0.35;
+    stream[offset + 2] = gz * 0.35;
 
-    const node = networkNodes[Math.floor(seeded(index, 23) * networkNodes.length)];
-    const nodeAngle = seeded(index, 29) * TAU;
-    const nodeRadius = Math.pow(seeded(index, 31), 1.8) * 0.2;
-    neural[offset] = node.x + Math.cos(nodeAngle) * nodeRadius;
-    neural[offset + 1] = node.y + Math.sin(nodeAngle) * nodeRadius;
-    neural[offset + 2] = node.z + (seeded(index, 34) - 0.5) * 0.22;
+    const isEdge = seeded(index, 21) > 0.3;
+    if (isEdge && networkColumns.length > 1) {
+       const col = Math.floor(seeded(index, 22) * (networkColumns.length - 1));
+       const fromNode = networkColumns[col][Math.floor(seeded(index, 23) * networkColumns[col].length)];
+       const toNode = networkColumns[col+1][Math.floor(seeded(index, 24) * networkColumns[col+1].length)];
+       const t = seeded(index, 25);
+       neural[offset] = fromNode.x + (toNode.x - fromNode.x) * t + (seeded(index, 26)-0.5)*0.08;
+       neural[offset + 1] = fromNode.y + (toNode.y - fromNode.y) * t + (seeded(index, 27)-0.5)*0.08;
+       neural[offset + 2] = fromNode.z + (toNode.z - fromNode.z) * t + (seeded(index, 28)-0.5)*0.08;
+    } else {
+       const node = networkNodes[Math.floor(seeded(index, 23) * networkNodes.length)];
+       const nodeAngle = seeded(index, 29) * TAU;
+       const nodeRadius = Math.pow(seeded(index, 31), 1.5) * 0.18;
+       neural[offset] = node.x + Math.cos(nodeAngle) * nodeRadius;
+       neural[offset + 1] = node.y + Math.sin(nodeAngle) * nodeRadius;
+       neural[offset + 2] = node.z + (seeded(index, 34) - 0.5) * 0.18;
+    }
 
     const cube = cubePoint(index);
-    embedding[offset] = cube[0];
-    embedding[offset + 1] = cube[1];
-    embedding[offset + 2] = cube[2];
+    embedding[offset] = cube[0] * 0.8;
+    embedding[offset + 1] = cube[1] * 0.8;
+    embedding[offset + 2] = cube[2] * 0.8;
 
     const coreY = 1 - (index / Math.max(1, count - 1)) * 2;
     const coreRadius = Math.sqrt(Math.max(0, 1 - coreY * coreY));
-    const coreAngle = index * 2.399963229728653;
-    const coreScale = 0.66 + seeded(index, 47) * 0.5;
+    const coreAngle = index * Math.PI * (1 + Math.sqrt(5));
+    const coreScale = 0.8;
     core[offset] = Math.cos(coreAngle) * coreRadius * coreScale;
     core[offset + 1] = coreY * coreScale;
     core[offset + 2] = Math.sin(coreAngle) * coreRadius * coreScale;
@@ -133,23 +147,14 @@ function makeLifecycleGeometry(count: number) {
 function makeNetworkGeometry() {
   const vertices: number[] = [];
   for (let column = 0; column < networkColumns.length - 1; column += 1) {
-    networkColumns[column].forEach((from, fromIndex) => {
-      networkColumns[column + 1].forEach((to, toIndex) => {
-        if ((fromIndex * 3 + toIndex * 2 + column) % 4 !== 0) return;
+    networkColumns[column].forEach((from) => {
+      networkColumns[column + 1].forEach((to) => {
         vertices.push(from.x, from.y, from.z, to.x, to.y, to.z);
       });
     });
   }
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
-  return geometry;
-}
-
-function makeNodeGeometry() {
-  const positions = new Float32Array(networkNodes.length * 3);
-  networkNodes.forEach((node, index) => node.toArray(positions, index * 3));
-  const geometry = new THREE.BufferGeometry();
-  geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
   return geometry;
 }
 
@@ -198,34 +203,85 @@ function LifecycleParticles({ interactive, reducedMotion }: WorkflowBackgroundSc
 function NeuralStructure({ reducedMotion }: { reducedMotion: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
   const lineMaterialRef = useRef<THREE.LineBasicMaterial>(null);
-  const pointMaterialRef = useRef<THREE.PointsMaterial>(null);
+  const nodeMeshRef = useRef<THREE.InstancedMesh>(null);
   const lineGeometry = useMemo(() => makeNetworkGeometry(), []);
-  const nodeGeometry = useMemo(() => makeNodeGeometry(), []);
+  
+  const dummy = useMemo(() => new THREE.Object3D(), []);
+  const color = useMemo(() => new THREE.Color(), []);
+  
+  const nodeLayers = useMemo(() => {
+    const layers: number[] = [];
+    networkColumns.forEach((col, layerIdx) => {
+      col.forEach(() => layers.push(layerIdx));
+    });
+    return layers;
+  }, []);
+  
+  const nodePhases = useMemo(() => networkNodes.map((_, i) => seeded(i * 11) * Math.PI * 2), []);
 
   useEffect(() => () => {
     lineGeometry.dispose();
-    nodeGeometry.dispose();
-  }, [lineGeometry, nodeGeometry]);
+  }, [lineGeometry]);
 
   useFrame((state) => {
     const time = reducedMotion ? 10.4 : state.clock.elapsedTime;
     const energy = stageWeight(stageAt(time), 2);
+    
     if (groupRef.current) {
       groupRef.current.rotation.y = Math.sin(time * 0.18) * 0.13;
       groupRef.current.rotation.x = -0.08 + Math.cos(time * 0.14) * 0.04;
     }
-    if (lineMaterialRef.current) lineMaterialRef.current.opacity = energy * 0.36;
-    if (pointMaterialRef.current) pointMaterialRef.current.opacity = energy * 0.88;
+    
+    if (lineMaterialRef.current) {
+      lineMaterialRef.current.opacity = energy * 0.12;
+    }
+    
+    if (nodeMeshRef.current) {
+      const activeColor = new THREE.Color("#ffffff");
+      const baseColor = new THREE.Color("#56d3b0");
+      
+      networkNodes.forEach((node, i) => {
+        const layer = nodeLayers[i];
+        const phase = nodePhases[i];
+        
+        const wave = (time * 1.5 - layer * 1.2 + phase * 0.3) % (Math.PI * 2);
+        let activation = 0;
+        if (wave > 0 && wave < Math.PI) {
+           activation = Math.sin(wave);
+        }
+        
+        const scale = 0.04 + activation * 0.045;
+        
+        dummy.position.copy(node);
+        dummy.scale.set(scale, scale, scale);
+        dummy.updateMatrix();
+        nodeMeshRef.current!.setMatrixAt(i, dummy.matrix);
+        
+        color.copy(baseColor).lerp(activeColor, activation * 0.8);
+        nodeMeshRef.current!.setColorAt(i, color);
+      });
+      
+      nodeMeshRef.current.instanceMatrix.needsUpdate = true;
+      if (nodeMeshRef.current.instanceColor) {
+        nodeMeshRef.current.instanceColor.needsUpdate = true;
+      }
+      (nodeMeshRef.current.material as THREE.MeshBasicMaterial).opacity = energy * 0.95;
+    }
   });
 
   return (
     <group ref={groupRef}>
       <lineSegments geometry={lineGeometry}>
-        <lineBasicMaterial ref={lineMaterialRef} color="#66e3c0" transparent opacity={0} depthWrite={false} blending={THREE.AdditiveBlending} />
+        <lineBasicMaterial ref={lineMaterialRef} color="#8beacb" transparent opacity={0} depthWrite={false} blending={THREE.AdditiveBlending} />
       </lineSegments>
-      <points geometry={nodeGeometry}>
-        <pointsMaterial ref={pointMaterialRef} color="#eafbf3" size={0.055} transparent opacity={0} depthWrite={false} blending={THREE.AdditiveBlending} />
-      </points>
+      <instancedMesh
+        ref={nodeMeshRef}
+        args={[undefined as any, undefined as any, networkNodes.length]}
+        frustumCulled={false}
+      >
+        <sphereGeometry args={[1, 16, 16]} />
+        <meshBasicMaterial transparent opacity={0} depthWrite={false} blending={THREE.AdditiveBlending} />
+      </instancedMesh>
     </group>
   );
 }
